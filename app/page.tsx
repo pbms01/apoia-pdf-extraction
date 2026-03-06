@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react'
 import { Container, Row, Col, Card, Button, Alert } from 'react-bootstrap'
 import ApiKeyConfig from '../components/ApiKeyConfig'
 import ModelSelector from '../components/ModelSelector'
-import PdfUploader from '../components/PdfUploader'
+
 import PromptSelector from '../components/PromptSelector'
 import ExtractedText from '../components/ExtractedText'
 import PromptPreview from '../components/PromptPreview'
@@ -16,8 +16,6 @@ export default function Home() {
     const [selectedModel, setSelectedModel] = useState('')
     const [selectedPrompt, setSelectedPrompt] = useState('')
     const [extractedText, setExtractedText] = useState('')
-    const [fileName, setFileName] = useState('')
-    const [numPages, setNumPages] = useState(0)
     const [pieceDescr, setPieceDescr] = useState('Documento')
 
     // Prompt preview state
@@ -29,13 +27,6 @@ export default function Home() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
 
-    const handleTextExtracted = useCallback((text: string, fName: string, pages: number) => {
-        setExtractedText(text)
-        setFileName(fName)
-        setNumPages(pages)
-        setResult('')
-        setError('')
-    }, [])
 
     const handleBuildPrompt = useCallback(async () => {
         if (!selectedPrompt || !extractedText) return
@@ -183,7 +174,7 @@ export default function Home() {
                         <Alert variant="info" className="mt-2 py-1 small">
                             {!Object.keys(apiKeys).length && 'Configure uma chave de API. '}
                             {!selectedModel && 'Selecione um modelo. '}
-                            {!extractedText && 'Faca upload de um PDF. '}
+                            {!extractedText && 'Cole o texto do documento. '}
                             {!selectedPrompt && 'Selecione um prompt. '}
                         </Alert>
                     )}
@@ -191,24 +182,15 @@ export default function Home() {
 
                 {/* Main content */}
                 <Col md={9} className="main-content p-4">
-                    <div className="step-header">1. Upload do PDF</div>
-                    <PdfUploader onTextExtracted={handleTextExtracted} />
-
-                    {extractedText && (
-                        <>
-                            <div className="step-header mt-4">2. Texto Extraido (editavel)</div>
-                            <ExtractedText
-                                text={extractedText}
-                                fileName={fileName}
-                                numPages={numPages}
-                                onTextChange={setExtractedText}
-                            />
-                        </>
-                    )}
+                    <div className="step-header">1. Texto do Documento</div>
+                    <ExtractedText
+                        text={extractedText}
+                        onTextChange={setExtractedText}
+                    />
 
                     {selectedPrompt && extractedText && (
                         <>
-                            <div className="step-header mt-4">3. Preview do Prompt</div>
+                            <div className="step-header mt-4">2. Preview do Prompt</div>
                             <PromptPreview
                                 systemPrompt={builtSystemPrompt}
                                 userPrompt={builtUserPrompt}
@@ -218,7 +200,7 @@ export default function Home() {
 
                     {(result || loading || error) && (
                         <>
-                            <div className="step-header mt-4">4. Resultado</div>
+                            <div className="step-header mt-4">3. Resultado</div>
                             <ResultDisplay
                                 result={result}
                                 loading={loading}
