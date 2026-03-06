@@ -111,13 +111,22 @@ export async function POST(request: NextRequest) {
 
         const modelRef = getModelRef(model, apiKey, !!structuredOutputs)
 
+
         if (!structuredOutputs) {
             const result = streamText({
                 model: modelRef,
                 messages,
                 maxRetries: 0,
+                onError: ({ error }) => {
+                    console.error('streamText error:', error)
+                },
             })
-            return result.toDataStreamResponse()
+            return result.toDataStreamResponse({
+                getErrorMessage: (error) => {
+                    if (error instanceof Error) return error.message
+                    return String(error)
+                },
+            })
         } else {
             const result = streamObject({
                 model: modelRef,
@@ -126,6 +135,9 @@ export async function POST(request: NextRequest) {
                 schemaName: `schema_${definition.kind}`,
                 schemaDescription: `Schema for ${definition.kind}`,
                 schema: structuredOutputs.schema,
+                onError: ({ error }) => {
+                    console.error('streamObject error:', error)
+                },
             })
             return result.toTextStreamResponse()
         }
