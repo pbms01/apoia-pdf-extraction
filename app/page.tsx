@@ -115,6 +115,9 @@ export default function Home() {
                         } catch {
                             // Skip malformed lines
                         }
+                    } else if (line.startsWith('3:')) {
+                        const errMsg = JSON.parse(line.slice(2))
+                        throw new Error(errMsg)
                     }
                 }
             }
