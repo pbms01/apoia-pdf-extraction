@@ -17,7 +17,7 @@
     "next": "^14.2.3",
     "nunjucks": "^3.2.4",
     "partial-json": "^0.1.7",
-    "pdfjs-dist": "^4.3.136",
+    "unpdf": "^0.12.1",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.3.1",

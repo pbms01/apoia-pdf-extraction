@@ -4,9 +4,6 @@ const nextConfig = {
     eslint: {
         ignoreDuringBuilds: true,
     },
-    experimental: {
-        serverComponentsExternalPackages: ['pdfjs-dist'],
-    },
     webpack: (config, { isServer }) => {
         config.module.rules.push({
             test: /\.(txt|md|html)$/,

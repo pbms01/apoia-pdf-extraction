@@ -1,10 +1,9 @@
 // @ts-nocheck
 import { NextRequest, NextResponse } from 'next/server'
-import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs'
+import { getDocumentProxy } from 'unpdf'
 
-// Inline pdfToText to avoid worker import issues in the sub-app
 async function pdfToText(blob: ArrayBuffer) {
-    const doc = await getDocument(blob.slice(0)).promise
+    const doc = await getDocumentProxy(new Uint8Array(blob))
     const pdf = {
         pages: [] as any[]
     }
@@ -16,7 +15,7 @@ async function pdfToText(blob: ArrayBuffer) {
             pageInfo: { num: pageNum, height: viewport.height }
         }
         pdf.pages.push(pag)
-        await page.getTextContent({ normalizeWhitespace: true }).then((content) => {
+        await page.getTextContent().then((content) => {
             pag.content = content.items.map(item => ({
                 str: item.str,
             }))
