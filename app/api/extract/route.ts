@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { NextRequest, NextResponse } from 'next/server'
-import { getDocument } from 'pdfjs-dist'
+import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs'
 
 // Inline pdfToText to avoid worker import issues in the sub-app
 async function pdfToText(blob: ArrayBuffer) {
